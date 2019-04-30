@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>Spack: a Package Manager for Scientific Software</title>
+    <title>Software Development and Deployment with Spack</title>
 
-    <meta name="description" content="Presentation for the 10th HPC Advisory Council in Lugano.">
+    <meta name="description" content="Slides for the 'Software Management Course' at CSCS (May 14th, 2019) in Lugano.">
     <meta name="author" content="Massimiliano Culpo">
 
 
@@ -32,7 +32,7 @@
         <!-- TITLE -->
         <section data-background-image="resources/epfl-title-page.jpg"
                  data-background-opacity=0.5>
-            <h3>Spack: a Package Manager for Scientific Software</h3>
+            <h3>Software Development and Deployment with Spack</h3>
             Massimiliano Culpo - SCITAS, EPFL
         </section>
 
@@ -40,7 +40,7 @@
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
 
             <section>
-                <h3>Why did the project start?</h3>
+                <h3>Why are we here, talking about package managers?</h3>
             </section>
 
             <section>
@@ -63,6 +63,11 @@
                 <h4>Installing software manually isn't an option!</h4>
             </section>
 
+            <section>
+                <h4>Using scripts is only slightly better!</h4>
+            </section>
+
+            <!-- TODO: modify this example to use HPX -->
             <section>
                 <h4>Compare with what happens on a workstation</h4>
                 <pre><code class="shell" data-trim>
@@ -89,11 +94,17 @@ $ which python
 
         <!-- What is Spack? -->
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <h3>What is Spack?</h3>
+            <h4>Level 1</h4>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
 
             <section>
-                <h3>What is Spack?</h3>
+                <h3>A quick overview of the tool</h3>
             </section>
 
+            <!-- TODO: modify this example to use HPX -->
             <section>
                 <h4>Spack is a <u>package manager</u> for HPC</h4>
                 <pre><code class="shell" data-trim>
@@ -115,13 +126,28 @@ $ spack install hdf5
             </section>
 
             <section>
-                <h4>Who can profit from Spack?</h4>
+                <h4>Spack is an <u>open source</u> project</h4>
                 <ul>
-                    <li>End users of HPC software</li>
-                    <li>HPC application teams</li>
-                    <li>Package developers</li>
-                    <li>User support teams at HPC centers</li>
+                    <li>Lead developer: <u>Todd Gamblin</u> (LLNL)</li>
+                    <li>Codebase hosted on Github</li>
+                    <li>Dual license Apache-2.0 or MIT</li>
+                    <li>Want to get buy-in and PRs by HPC vendors</li>
+                    <li>Very active and engaging community</li>
                 </ul>
+                <br>
+                <p><a href="https://github.com/spack/spack">https://github.com/spack/spack</a></p>
+            </section>
+
+            <section>
+                <h4>Spack is used worldwide!</h4>
+                <div>
+                    <img src="resources/spack-usage-worldwide.png" height="70%" width="70%">
+                </div>
+                Sessions on <a href="https://spack.readthedocs.io" >spack.readthedocs.io</a>  for one month
+            </section>
+
+            <section>
+                <h4>Ongoing efforts to disseminate best practices</h4>
             </section>
 
             <section>
@@ -157,55 +183,13 @@ class Kripke(Package):
                     $ spack versions &lt;package-name&gt;
                 </code></pre>
             </section>
-
-            <section>
-                <h4>Spack is an <u>open source</u> project</h4>
-                <ul>
-                    <li>Lead developer: <u>Todd Gamblin</u> (LLNL)</li>
-                    <li>Codebase hosted on Github</li>
-                    <li>Dual license Apache-2.0 or MIT</li>
-                    <li>Want to get buy-in and PRs by HPC vendors</li>
-                    <li>Very active and engaging community</li>
-                </ul>
-                <br>
-                <p><a href="https://github.com/spack/spack">https://github.com/spack/spack</a></p>
-            </section>
-
-            <section>
-                <h4>Spack is used worldwide!</h4>
-                <div>
-                    <img src="resources/spack-usage-worldwide.png" height="70%" width="70%">
-                </div>
-                Sessions on <a href="https://spack.readthedocs.io" >spack.readthedocs.io</a>  for one month
-            </section>
-
-            <section>
-                <h4>Contributions to Spack</h4>
-                <div>
-                    <img id="contributions-plot"
-                         src="resources/github_contributions_packages.png"
-                         height="80%" width="80%"
-                         ondblclick="document.getElementById('contributions-plot').setAttribute('src','resources/github_contributions_packages.png'); return false;"
-                         onclick="document.getElementById('contributions-plot').setAttribute('src','resources/github_contributions_core.png'); return false;"
-                    >
-                </div>
-                Spack is committed to be open source
-            </section>
-
-            <!-- section>
-                <h4>Spack is already used at many HPC sites</h4>
-            </section -->
-
-            <section>
-                <h4>Ongoing efforts to disseminate best practices</h4>
-
-            </section>
         </section>
 
         <!-- Fight combinatorics -->
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9" >
+
             <section>
-                <h3>Spack fights combinatorics with combinatorics</h3>
+                <h3>How is software complexity tamed by Spack?</h3>
             </section>
 
             <section>
@@ -270,13 +254,19 @@ class Openblas(MakefilePackage):
                 All the software is installed in the <em>Spack's store</em>
             </section>
 
+            <!-- TODO: Add a slide on virtual dependencies -->
+
+            <section>
+                <h3>Spack fights combinatorics with combinatorics</h3>
+            </section>
+
         </section>
 
         <!-- Store info in a DB -->
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9" >
 
             <section>
-                <h3>Spack has been designed with reproducibility in mind</h3>
+                <h3>Which information is stored at install time?</h3>
             </section>
 
             <section>
@@ -428,6 +418,44 @@ modules:
                 <p><a href="https://spack.readthedocs.io/en/latest/tutorial_modules.html">Tutorial: Spack 101 - module files</a></p>
             </section>
 
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>How are shared libraries found at run-time?</h3>
+            </section>
+
+            <!-- TODO: Talk bout RPATHs and compiler wrappers -->
+        </section>
+
+        <!-- TODO: Demonstrate all the basics commands within a Docker environment -->
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>Packaging your software</h3>
+                <h4>Level 2</h4>
+            </section>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>The development environment</h3>
+                <h4>Level 3</h4>
+            </section>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>Deploy stable versions</h3>
+                <h4>Level 4</h4>
+            </section>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>What comes next?</h3>
+                <h4>Bonus level</h4>
+            </section>
         </section>
 
         <!-- Spack environments -->
