@@ -254,6 +254,15 @@ class Openblas(MakefilePackage):
                 All the software is installed in the <em>Spack's store</em>
             </section>
 
+            <section>
+                <h4>APIs with multiple providers are allowed</h4>
+                <div>
+                    <img src="resources/virtual_dependency.svg" width="100%" height="100%"
+                         style="background: none; border: 0px">
+                </div>
+                <em>Virtual dependencies</em> declare a dependency on a versioned API and not on
+                a specific provider
+            </section>
             <!-- TODO: Add a slide on virtual dependencies -->
 
         </section>
@@ -343,20 +352,18 @@ $ tree $(spack location -i hdf5)/.spack
             <section>
                 <h4>Check beforehand the result of concretization</h4>
                 <pre><code class="shell" data-trim>
-$ spack spec -Il hdf5+mpi ^mpich
+$ spack spec -Il hpx cxxstd=14
 Input spec
 --------------------------------
- -   hdf5+mpi
- -       ^mpich
+ -   hpx cxxstd=14
 
 Concretized
 --------------------------------
- -   wqoi56r  hdf5@1.10.4%gcc@8.2.0~cxx~debug~fortran~hl+mpi+pic+shared~szip~threadsafe arch=linux-ubuntu18.04-x86_64
- -   k2mhs2k      ^mpich@3.3%gcc@8.2.0 device=ch3 +hydra netmod=tcp +pmi+romio~verbs arch=linux-ubuntu18.04-x86_64
- -   rwrp443          ^findutils@4.6.0%gcc@8.2.0 patches=84b916c0bf8c51b7e7b28417692f0ad3e7030d1f3c248ba77c42ede5c1c5d11e,bd9e4e5cc280f9753ae14956c4e4aa17fe7a210f55dd6c84aa60b12d106d47a2 arch=linux-ubuntu18.04-x86_64
- -   vsawnwb              ^autoconf@2.69%gcc@8.2.0 arch=linux-ubuntu18.04-x86_64
+ -   qjjz5gy  hpx@1.2.1%gcc@8.2.0 build_type=RelWithDebInfo ~cuda cuda_arch=none cxxstd=14 instrumentation=none malloc=tcmalloc +networking~tools arch=linux-ubuntu18.04-x86_64
+[+]  zllsejt      ^boost@1.70.0%gcc@8.2.0+atomic+chrono~clanglibcpp~context~coroutine cxxstd=14 +date_time~debug+exception~fiber+filesystem+graph~icu+iostreams+locale+log+math~mpi+multithreaded~numpy patches=2ab6c72d03dec6a4ae20220a9dfd5c8c572c5294252155b85c6874d97c323199 ~pic+program_options~python+random+regex+serialization+shared+signals~singlethreaded+system~taggedlayout+test+thread+timer~versionedlayout+wave arch=linux-ubuntu18.04-x86_64
 [...]
-[+]  ivqu252      ^zlib@1.2.11%gcc@8.2.0+optimize+pic+shared arch=linux-ubuntu18.04-x86_64
+[+]  kgkd3ck          ^libffi@3.2.1%gcc@8.2.0 arch=linux-ubuntu18.04-x86_64
+[+]  oukq22h          ^sqlite@3.26.0%gcc@8.2.0~functions arch=linux-ubuntu18.04-x86_64
                 </code></pre>
             </section>
 
@@ -392,27 +399,6 @@ $ spack uninstall zlib@1.2.8
 ==> Do you want to proceed? [y/N] y
 ==> Successfully uninstalled zlib@1.2.8%gcc@8.2.0 [...] /yxoie27
                 </code></pre>
-            </section>
-
-            <!-- TODO: move module files section later -->
-            <section>
-                <h4>Generate module files for HPC sites</h4>
-                <pre><code class="yaml" data-trim>
-modules:
-  lmod:
-    core_compilers:
-      - gcc@4.8.5
-    hierarchy:
-      - mpi
-      - lapack
-    hash_length: 0
-    all:
-      suffixes:
-        +mpi: mpi
-        +openmp: openmp
-        ...
-                </code></pre>
-                <p><a href="https://spack.readthedocs.io/en/latest/tutorial_modules.html">Tutorial: Spack 101 - module files</a></p>
             </section>
 
         </section>
@@ -455,6 +441,28 @@ modules:
                 <h3>Deploy stable versions</h3>
                 <h4>Level 4</h4>
             </section>
+
+            <!-- TODO: move module files section later -->
+            <section>
+                <h4>Generate module files for HPC sites</h4>
+                <pre><code class="yaml" data-trim>
+modules:
+  lmod:
+    core_compilers:
+      - gcc@4.8.5
+    hierarchy:
+      - mpi
+      - lapack
+    hash_length: 0
+    all:
+      suffixes:
+        +mpi: mpi
+        +openmp: openmp
+        ...
+                </code></pre>
+                <p><a href="https://spack.readthedocs.io/en/latest/tutorial_modules.html">Tutorial: Spack 101 - module files</a></p>
+            </section>
+
         </section>
 
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
