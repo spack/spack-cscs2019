@@ -15,7 +15,7 @@ RUN apt-get -yqq update && apt-get -yqq install ca-certificates \
         iproute2 make \
         openssh-server python python-pip tcl \
         emacs unzip \
-        autoconf \
+        autoconf tree \
     && apt-get clean
 
 # Copy in scripts to test container
