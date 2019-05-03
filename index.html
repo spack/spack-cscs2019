@@ -36,6 +36,8 @@
             Massimiliano Culpo - SCITAS, EPFL
         </section>
 
+        <!-- TODO: Add a table of content -->
+
         <!-- Why did the project start? -->
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
 
@@ -147,42 +149,6 @@ $ spack install hdf5
                 <h4>Ongoing efforts to disseminate best practices</h4>
             </section>
 
-            <!-- TODO: Remove the two slides below (they are of better use in the packaging section)-->
-            <!--
-            <section>
-                <h4>Packages are Python classes</h4>
-                <pre><code class="python" data-trim="">
-class Kripke(Package):
-    """Kripke is a simple, scalable, 3D Sn
-    deterministic particle transport mini app.
-    """
-    homepage = "https://codesign.llnl.gov/kripke.php"
-    url      = "https://codesign.llnl.gov/kripke-1.1.tar.gz"
-
-    version('1.1', '7fe6f2b26ed983a6ce5495ab701f85bf')
-    version('1.0', 'f4247dde07952a5ff866b24e45b5cdd1')
-
-    variant('mpi', default=True, description='Build with MPI.')
-
-    depends_on('mpi', when="+mpi")
-                </code></pre>
-            </section>
-
-            <section>
-                <h4>Easy to work with packages</h4>
-                <pre><code class="shell" data-trim>
-                    $ # Create a new package in the built-in repository
-                    $ spack create &lt;url&gt;
-
-                    $ # Modify an existing package
-                    $ export EDITOR='emacs -nw'
-                    $ spack edit &lt;package-name&gt;
-
-                    $ # Scrape for versions of an existing package
-                    $ spack versions &lt;package-name&gt;
-                </code></pre>
-            </section>
-            -->
         </section>
 
         <!-- Fight combinatorics -->
@@ -409,31 +375,152 @@ $ spack uninstall zlib@1.2.8
             </section>
 
             <section>
-                <h4>Compilation is mediated by a wrapper script</h4>
+                <h4>A wrapper injects RPATHs during compilation</h4>
                 <div>
                     <img src="resources/compiler-wrapper.svg" height="80%" width="80%"
                          style="background: none; border: 0">
                 </div>
-                Also ensure the software <em>runs the way it was built</em>
+                In this way the software <em>runs the way it was built</em>
             </section>
 
-            <!-- TODO: Talk bout RPATHs and compiler wrappers -->
+            <!-- TODO: Talk bout RPATHs vs. RUNPATHs? -->
         </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9" >
+            <section>
+                <h3>How can I fine-tune Spack's configuration?</h3>
+            </section>
+
+            <section>
+                <h4>Settings are stored in a hierarchy of files</h4>
+                <table style="margin-top: 3%;margin-bottom: 3%">
+                    <thead>
+                        <tr><th>Scope</th><th>Directory</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>User     </td><td>~/.spack</td></tr>
+                        <tr><td>Site     </td><td>${spack_root}/etc/spack</td></tr>
+                        <tr><td>System   </td><td>/etc/spack</td></tr>
+                        <tr><td>Defaults </td><td>${spack_root}/etc/spack/defaults</td></tr>
+                    </tbody>
+                </table>
+                Each configuration is <em>a merge</em> of multiple scopes
+            </section>
+
+            <section>
+                <h4>Configuration files are written in YAML format</h4>
+                <pre><code class="yaml" data-trim="">
+compilers::
+- compiler:
+    environment: {}
+    extra_rpaths: []
+    flags: {}
+    modules: []
+    operating_system: ubuntu16.04
+    paths:
+      cc: /usr/bin/gcc
+      cxx: /usr/bin/g++
+      f77: /usr/bin/gfortran
+      fc: /usr/bin/gfortran
+    spec: gcc@5.4.0
+    target: x86_64
+                </code></pre>
+                A double colon <em>overrides</em> lower scopes
+            </section>
+        </section>
+
 
         <!-- TODO: Demonstrate all the basics commands within a Docker environment -->
 
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <h3>Packaging your software</h3>
+            <h4>Level 2</h4>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+
             <section>
-                <h3>Packaging your software</h3>
-                <h4>Level 2</h4>
+                <h3>How does Spack store recipes?</h3>
+            </section>
+
+            <section>
+                <h4>Packages are Python classes</h4>
+                <pre><code class="python" data-trim="">
+class Kripke(Package):
+    """Kripke is a simple, scalable, 3D Sn
+    deterministic particle transport mini app.
+    """
+    homepage = "https://codesign.llnl.gov/kripke.php"
+    url      = "https://codesign.llnl.gov/kripke-1.1.tar.gz"
+
+    version('1.1', '7fe6f2b26ed983a6ce5495ab701f85bf')
+    version('1.0', 'f4247dde07952a5ff866b24e45b5cdd1')
+
+    variant('mpi', default=True, description='Build with MPI.')
+
+    depends_on('mpi', when="+mpi")
+                </code></pre>
+            </section>
+
+            <section>
+                <h4></h4>
+            </section>
+            <!-- TODO: Talk about the various directives: version, variant, depends_on, resource -->
+
+            <section>
+                <h4>Easy to work with packages</h4>
+                <pre><code class="shell" data-trim>
+                    $ # Create a new package in the built-in repository
+                    $ spack create &lt;url&gt;
+
+                    $ # Modify an existing package
+                    $ export EDITOR='emacs -nw'
+                    $ spack edit &lt;package-name&gt;
+
+                    $ # Scrape for versions of an existing package
+                    $ spack versions &lt;package-name&gt;
+                </code></pre>
+            </section>
+
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>Which build-systems are supported?</h3>
+            </section>
+
+            <!-- TODO: Focus on the dynamic structure of Base classes, and on the fact that they
+                       abstract common workflows -->
+
+            <!-- TODO: exemplify what can be customized within the CMake base class -->
+            <!-- TODO: run_before and run_after decorators -->
+            <!-- TODO: talk about executables as functions -->
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>How can we customize the build environment?</h3>
             </section>
         </section>
 
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
             <section>
-                <h3>The development environment</h3>
-                <h4>Level 3</h4>
+                <h3>How do we query library information from a package?</h3>
             </section>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>How can I debug package builds?</h3>
+            </section>
+
+            <!-- TODO: Grep for errors using Spack -->
+            <!-- TODO: spack build-env etc. -->
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <h3>The development environment</h3>
+            <h4>Level 3</h4>
         </section>
 
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
