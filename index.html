@@ -237,7 +237,7 @@ class Openblas(MakefilePackage):
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9" >
 
             <section>
-                <h3>Which information is stored at install time?</h3>
+                <h3>Which information is stored at install-time?</h3>
             </section>
 
             <section>
@@ -511,7 +511,7 @@ class Kripke(Package):
 
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
             <section>
-                <h3>How can I debug package builds?</h3>
+                <h3>How can I debug failing package builds?</h3>
             </section>
 
             <!-- TODO: Grep for errors using Spack -->
@@ -525,44 +525,7 @@ class Kripke(Package):
 
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
             <section>
-                <h3>Deploy stable versions</h3>
-                <h4>Level 4</h4>
-            </section>
-
-            <!-- TODO: move module files section later -->
-            <section>
-                <h4>Generate module files for HPC sites</h4>
-                <pre><code class="yaml" data-trim>
-modules:
-  lmod:
-    core_compilers:
-      - gcc@4.8.5
-    hierarchy:
-      - mpi
-      - lapack
-    hash_length: 0
-    all:
-      suffixes:
-        +mpi: mpi
-        +openmp: openmp
-        ...
-                </code></pre>
-                <p><a href="https://spack.readthedocs.io/en/latest/tutorial_modules.html">Tutorial: Spack 101 - module files</a></p>
-            </section>
-
-        </section>
-
-        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
-            <section>
-                <h3>What comes next?</h3>
-                <h4>Bonus level</h4>
-            </section>
-        </section>
-
-        <!-- Spack environments -->
-        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
-            <section>
-                <h3>Spack permits to set-up specific purpose environments</h3>
+                <h3>Spack environments</h3>
             </section>
 
             <section>
@@ -616,18 +579,50 @@ spack:
 
         </section>
 
-        <!-- Big things on the roadmap -->
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
             <section>
-                <h3>The next big things on the roadmap</h3>
+                <h3>How can I use Spack environments then?</h3>
+            </section>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>Can I extend Spack with custom commands?</h3>
+            </section>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>Deploy stable versions</h3>
+                <h4>Level 4</h4>
             </section>
 
+            <!-- TODO: move module files section later -->
             <section>
-                <h4>CI infrastructure for source and binary packages</h4>
-                <div>
-                    <img src="resources/ci_infrastructure.svg" height="100%" width="100%"
-                         style="background: none; border: 0">
-                </div>
+                <h4>Generate module files for HPC sites</h4>
+                <pre><code class="yaml" data-trim>
+modules:
+  lmod:
+    core_compilers:
+      - gcc@4.8.5
+    hierarchy:
+      - mpi
+      - lapack
+    hash_length: 0
+    all:
+      suffixes:
+        +mpi: mpi
+        +openmp: openmp
+        ...
+                </code></pre>
+                <p><a href="https://spack.readthedocs.io/en/latest/tutorial_modules.html">Tutorial: Spack 101 - module files</a></p>
+            </section>
+
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>How can I define a Stack to be deployed?</h3>
             </section>
 
             <section>
@@ -657,13 +652,47 @@ spack:
                 Single command deployment at HPC facilities
             </section>
 
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
             <section>
-                <h4>Chain instances to read upstream databases</h4>
+                <h3>Can I generate module files for installed software?</h3>
+            </section>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>Can I maintain repositories with site-specific recipes?</h3>
+            </section>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>Can I reuse what is installed in another Spack instance?</h3>
+            </section>
+
+            <section>
+                <h4>Spack chains allows to read upstream DBs</h4>
                 <div>
                     <img src="resources/spack-chains.svg" width="70%" height="70%"
                          style="background: none; border: 0">
                 </div>
-                It's Spack all the way down!
+                Deploy with different levels of stability
+            </section>
+        </section>
+
+        <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
+            <section>
+                <h3>What comes next?</h3>
+                <h4>Bonus level</h4>
+            </section>
+
+            <section>
+                <h4>CI infrastructure for sources and binaries</h4>
+                <div>
+                    <img src="resources/ci_infrastructure.svg" height="100%" width="100%"
+                         style="background: none; border: 0">
+                </div>
             </section>
 
             <section>
@@ -683,12 +712,13 @@ spack:
                 </div>
                 Probably the <em>most wanted feature</em> in Spack
             </section>
+
         </section>
 
         <!-- Final slide -->
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
             <section>
-                <h2>Thanks for listening! Questions?</h2>
+                <h3>Thanks for listening! Questions?</h3>
             </section>
         </section>
 

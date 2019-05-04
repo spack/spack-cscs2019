@@ -50,7 +50,7 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1145"
+     inkscape:window-height="1025"
      id="namedview214"
      showgrid="false"
      inkscape:pagecheckerboard="true"
@@ -59,12 +59,12 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="1.4531591"
-     inkscape:cx="388.464"
+     inkscape:cx="455.22785"
      inkscape:cy="137.39686"
      inkscape:window-x="1920"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg212" />
+     inkscape:current-layer="g1241" />
   <clipPath
      id="g1b39395ef2_1_52.0">
     <path
@@ -415,9 +415,9 @@
       </g>
       <path
          id="path1239"
-         d="m 487.16244,222.24599 h 78.26773 v 54.29922 h -78.26773 z"
+         d="m 486.32005,221.59325 h 80.42104 v 55.57472 h -80.42104 z"
          inkscape:connector-curvature="0"
-         style="fill:none;fill-rule:evenodd;stroke:#ff0003;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1" />
+         style="fill:none;fill-rule:evenodd;stroke:#ff0003;stroke-width:6.15299559;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-opacity:1" />
       <path
          id="path1239-6"
          d="m 188.09264,255.15986 h 96.72791 v 54.29922 h -96.72791 z"
