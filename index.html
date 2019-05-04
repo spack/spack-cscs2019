@@ -308,7 +308,7 @@ $ tree $(spack location -i hdf5)/.spack
 
 6 directories, 7 files
                 </code></pre>
-                The JSON database can be regenerated based on this information
+                This permits to regenerate the JSON database!
             </section>
 
             <section>
@@ -463,18 +463,12 @@ class Kripke(Package):
             </section>
 
             <section>
-                <h4></h4>
-            </section>
-            <!-- TODO: Talk about the various directives: version, variant, depends_on, resource -->
-
-            <section>
-                <h4>Easy to work with packages</h4>
+                <h4>It's really easy to work with packages</h4>
                 <pre><code class="shell" data-trim>
                     $ # Create a new package in the built-in repository
                     $ spack create &lt;url&gt;
 
                     $ # Modify an existing package
-                    $ export EDITOR='emacs -nw'
                     $ spack edit &lt;package-name&gt;
 
                     $ # Scrape for versions of an existing package
@@ -482,21 +476,174 @@ class Kripke(Package):
                 </code></pre>
             </section>
 
+            <section>
+                <h4>Declare package versions and fetching</h4>
+                <pre><code class="python" data-trim>
+class QuantumEspresso(Package):
+    url = 'https://gitlab.com/QEF/.../q-e-qe-6.3.tar.gz'
+    git = 'https://gitlab.com/QEF/q-e.git'
+
+    version('6.4', sha256='781366d...bfe')
+    version('5.3', md5='be3f877...592',
+            url='https:///old-url.com/qe5.3.tgz')
+
+    version('develop', branch='develop')
+    version('latest-backports', branch='qe-6.3-backports')
+
+    def url_for_version(self, version):
+        """Returns the correct url for a given version"""
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Finding new versions of a package</h4>
+                <pre><code class="python" data-trim>
+class Mpich(Package):
+    url        = "http://[...]/downloads/3.0.4/3.0.4.tar.gz"
+    list_url   = "http://[...]/downloads/"
+    list_depth = 1
+                </code>
+                <code class="shell" data-trim>
+$ spack checksum mpich
+==> Found 34 versions of mpich:
+
+  3.3rc1  http://[...]/downloads/3.3rc1/mpich-3.3rc1.tar.gz
+  3.3b3   http://[...]/downloads/3.3b3/mpich-3.3b3.tar.gz
+  [...]
+
+==> How many would you like to checksum?
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Allow different configurations with variants</h4>
+                <pre>
+                    <code class="python" data-trim>
+class Hdf5(AutotoolsPackage):
+
+    variant('shared', default=True, description='...')
+
+    def configure_args(self):
+        extra_args = []
+        if '+shared' in self.spec:
+            extra_args.append('--enable-shared')
+        else:
+            extra_args.append('--disable-shared')
+            extra_args.append('--enable-static-exec')
+        ...
+                    </code>
+                    <code class="shell" data-trim>
+                        $ spack install hdf5~shared
+                        [...]
+                    </code>
+                </pre>
+            </section>
+
+            <section>
+                <h4>Variants support complex configurations</h4>
+                <pre><code class="python" data-trim>
+class Blis(AutotoolsPackage):
+    variant('threads', default='none',
+            description='Multithreading support',
+            values=('pthreads', 'openmp', 'none'), multi=False)
+
+    def configure_args(self):
+        options = []
+        if self.spec.variants['threads'].value == 'none':
+            options.append('--no-threads')
+        ...
+
+class Adios(AutotoolsPackage):
+    variant('staging',
+            values=any_combination_of('flexpath', 'dataspaces'),
+            description='Enable dataspaces and/or flexpath')
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Model the dependencies of a package</h4>
+                <pre><code class="python" data-trim>
+class Hpx(CMakePackage, CudaPackage):
+    variant(
+        'cxxstd', default='17', values=('98', '11', '14', '17'),
+        description='C++ standard used when building.'
+    )
+
+    depends_on('boost')
+    depends_on('python', type=('build', 'test', 'run'))
+
+    # Boost is further constrained depending on cxxstd
+    depends_on('boost cxxstd=98', when='cxxstd=98')
+    depends_on('boost cxxstd=11', when='cxxstd=11')
+    depends_on('boost cxxstd=14', when='cxxstd=14')
+    depends_on('boost cxxstd=17', when='cxxstd=17')
+                </code></pre>
+            </section>
+
         </section>
 
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
             <section>
-                <h3>Which build-systems are supported?</h3>
+                <h3>Does Spack support different build-systems?</h3>
             </section>
 
-            <!-- TODO: Focus on the dynamic structure of Base classes, and on the fact that they
-                       abstract common workflows -->
+            <section>
+                <h4>Spack supports many different build-systems</h4>
+                <table style="margin-top: 3%;margin-bottom: 3%">
+                    <thead>
+                    <tr><th>Base class</th><th>Purpose</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>Package </td><td>Generic, non-specialized</td></tr>
+                    <tr><td>MakefilePackage </td><td>Handwritten Makefiles</td></tr>
+                    <tr><td>AutotoolsPackage </td><td>GNU Autotools</td></tr>
+                    <tr><td>CMakePackage</td><td>CMake built packages</td></tr>
+                    <tr><td>...</td><td>...</td></tr>
+                    <tr><td>CudaPackage</td><td>Mixin to help with CUDA</td></tr>
+                    </tbody>
+                </table>
+            </section>
 
-            <!-- TODO: exemplify what can be customized within the CMake base class -->
-            <!-- TODO: run_before and run_after decorators -->
+            <section>
+                <h4>Each installation procedure is specific</h4>
+                <pre><code class="python" data-trim>
+class CMakePackage(PackageBase):
+
+    phases = ['cmake', 'build', 'install']
+
+    variant('build_type', default='RelWithDebInfo', ...)
+    depends_on('cmake', type='build')
+
+    def cmake(self, spec, prefix):
+        """Runs ``cmake`` in the build directory"""
+        options = [os.path.abspath(self.root_cmakelists_dir)]
+        options += self.std_cmake_args
+        options += self.cmake_args()
+        with working_dir(self.build_directory, create=True):
+            inspect.getmodule(self).cmake(*options)
+                </code></pre>
+                The defaults work fine for most packages
+            </section>
+
+            <section>
+                <h4>Decorators allow for an easy customization</h4>
+                <pre><code class="python" data-trim>
+class R(AutotoolsPackage):
+
+    @run_after('install')
+    def copy_makeconf(self):
+        # Make a copy of Makeconf because it will be
+        # needed to properly build R dependencies
+        src_makeconf = join_path(self.etcdir, 'Makeconf')
+        dst_makeconf = join_path(self.etcdir, 'Makeconf.spack')
+        install(src_makeconf, dst_makeconf)
+                </code></pre>
+                Actions can be executed before or after each phase
+            </section>
             <!-- TODO: talk about executables as functions -->
         </section>
 
+        <!-- TODO: Add this section if time remains
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
             <section>
                 <h3>How can we customize the build environment?</h3>
@@ -508,14 +655,64 @@ class Kripke(Package):
                 <h3>How do we query library information from a package?</h3>
             </section>
         </section>
+        -->
 
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
             <section>
                 <h3>How can I debug failing package builds?</h3>
             </section>
 
-            <!-- TODO: Grep for errors using Spack -->
-            <!-- TODO: spack build-env etc. -->
+            <section>
+                <h4>Stop at a specific phase of the installation</h4>
+                <pre><code class="shell" data-trim>
+$ spack configure hdf5~mpi
+==> Checking dependencies for hdf5~mpi
+==> zlib is already installed in /home/mculpo/[...]
+==> Installing hdf5
+[...]
+==> Created stage in /home/mculpo/[...]
+==> No patches needed for hdf5
+==> Building hdf5 [AutotoolsPackage]
+==> Executing phase: 'autoreconf'
+==> Executing phase: 'configure'
+==> Stopping at 'configure' phase
+
+$ spack cd hdf5~mpi
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Parse the build logs to search for errors</h4>
+                <pre><code class="shell" data-trim>
+$ spack log-parse $(spack location -i hdf5)/.spack/build.out
+0 errors
+
+$ spack log-parse --show=errors,warnings \
+  $(spack location -i hdf5)/.spack/build.out
+0 errors
+741 warnings
+     534     CC       H5dbg.lo
+     535     CC       H5system.lo
+     536   H5system.c: In function 'HDfprintf':
+  >> 537   H5system.c:276: warning: [...] [-Wformat-nonliteral]
+     538                  n = fprintf(stream, format_templ, x);
+     539                                      ^~~~~~~~~~~~
+[...]
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Spawn a shell with Spack's build-environment</h4>
+                <pre><code class="shell" data-trim>
+$ spack stage zlib
+==> Fetching file:///home/[...]/zlib-1.2.11.tar.gz
+==> Staging archive: /home/[...]/zlib-1.2.11.tar.gz
+==> Created stage in /home/[...]/zlib-1.2.11-ivqu252fvh7
+
+$ spack cd zlib
+$ spack build-env zlib -- /bin/bash
+                </code></pre>
+            </section>
         </section>
 
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
