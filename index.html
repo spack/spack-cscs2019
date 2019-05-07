@@ -726,7 +726,65 @@ $ spack build-env zlib -- /bin/bash
             </section>
 
             <section>
-                <h4>Spack environments are <em>virtualized</em> instances</h4>
+                <h4>Spack environments are virtualized instances</h4>
+                <pre><code class="shell" data-trim>
+$ spack env create my-project
+==> Created environment 'my-project' in [...]/my-project
+
+$ spack env activate my-project
+$ spack env status
+==> In environment my-project
+
+$ spack find
+==> In environment my-project
+==> No root specs
+
+==> 0 installed packages
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Environments are built over Spack's store</h4>
+                <pre><code class="shell" data-trim>
+$ spack find
+==> In environment my-project
+==> No root specs
+
+==> 0 installed packages
+
+$ spack install zlib hdf5~mpi
+==> zlib is already installed in [...]
+==> Installing hdf5
+[...]
+==> Successfully installed hdf5
+  Fetch: 0.06s.  Build: 1m 14.67s.  Total: 1m 14.73s.
+[+] /home/.../hdf5-1.10.4-xucyflhbo2p47n46smfsqo7p2y3hijmd
+                </code></pre>
+            </section>
+
+            <section>
+                <h4>Users can set-up groups of packages at once</h4>
+                <pre><code class="shell" data-trim>
+$ spack add hdf5~mpi python
+==> Adding hdf5~mpi to environment my-project
+==> Adding python to environment my-project
+==> Adding mpich to environment my-project
+
+$ spack find -v
+==> In environment my-project
+==> Root specs
+hdf5~mpi  mpich  python
+
+==> 0 installed packages
+
+$ spack install
+[...]
+                </code></pre>
+                Specs can be concretized <em>separately or together</em>
+            </section>
+
+            <section>
+                <h4>Details are configurable from a YAML file</h4>
                 <pre><code class="shell" data-trim>
 $ spack config get
 # This is a Spack Environment file.
@@ -742,17 +800,18 @@ spack:
   repos: []
   packages: {}
   config: {}
+  concretize_together: false
                 </code></pre>
+                This is the <em>manifest</em> of your environment
             </section>
 
             <section>
-                <h4>Abstract user requests are stored in <code>spack.yaml</code></h4>
+                <h4><code>spack.yaml</code> stores abstract user requests</h4>
                 <ul>
-                    <li>It's the configuration file we have seen before</li>
-                    <li>Does not have to live inside Spack tree</li>
-                    <li>Can be bundled with <em>anything</em></li>
-                    <li>Can be manipulated directly if it is in the <code>pwd</code></li>
-                    <li>Use <code>spack.yaml</code> to distribute an environment</li>
+                    <li>Might live inside Spack's tree or not</li>
+                    <li>Environment implicitly active if it is in the <code>pwd</code></li>
+                    <li>Spack provides a <code>cli</code> to manage environments</li>
+                    <li>Can be bundled with any software project</li>
                 </ul>
             </section>
 
@@ -771,7 +830,41 @@ spack:
  },
  ...
                 </code></pre>
-                Using either <code>spack.yaml</code> or <code>spack.lock</code> you can recreate an environment
+                Reproduce using either the <em>manifest</em> or the <em>lockfile</em>
+            </section>
+
+            <section>
+                <h4>Environments come with an associated <em>view</em></h4>
+                <table width="100%">
+                    <tbody>
+                    <tr>
+                        <td>
+                                <pre><code class="yaml" data-trim>
+spack:
+  specs:
+  - hdf5+mpi
+  - bzip2
+
+  view: True
+                                </code></pre>
+                        </td>
+                        <td>
+                                <pre><code class="shell" data-trim>
+$ ls .spack-env/view/bin
+h5clear   h5diff   ...   h5unjam
+h5copy    h5dump   ...   ph5diff
+h5debug   ...      ...
+
+$ ls .spack-env/view/include
+H5ACpublic.h     ...   hdf5.h
+H5Apublic.h      ...   zconf.h
+H5Cpublic.h      ...   zlib.h
+                                </code></pre>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                Single prefix projection of the combinatorial space
             </section>
 
         </section>
@@ -780,11 +873,90 @@ spack:
             <section>
                 <h3>How can I use Spack environments then?</h3>
             </section>
+
+            <section>
+                <h4>Create <em>manifest files</em> for development</h4>
+                <pre><code class="shell" data-trim>
+$ spack env create -d hpx-dev-env
+==> Updating view at [...]/hpx-dev-env/.spack-env/view
+==> Created environment in [...]/hpx-dev-env
+
+$ spack add boost@1.68.0 cxxstd=14 cmake git \
+  gperftools hwloc python
+==> Adding boost@1.68.0 cxxstd=14 to environment [...]/hpx-dev-env
+==> Adding cmake to environment [...]/hpx-dev-env
+==> Adding git to environment [...]/hpx-dev-env
+==> Adding gperftools to environment [...]/hpx-dev-env
+==> Adding hwloc to environment [...]/hpx-dev-env
+==> Adding python to environment [...]/hpx-dev-env
+==> Updating view at [...]/hpx-dev-env/.spack-env/view
+                </code></pre>
+                <code>spack.yaml</code> files can be part of your sources
+            </section>
+
+            <section>
+                <h4>Setup a development environment with them</h4>
+                <pre><code class="shell" data-trim>
+$ spack concretize
+ -   ttrkdry  boost@1.68.0%gcc@8.2.0+atomic[...]
+[+]  uisaimo      ^bzip2@1.0.6%gcc@8.2.0+shared
+[+]  cgavvmi          ^diffutils@3.7%gcc@8.2.0
+[+]  ivqu252      ^zlib@1.2.11%gcc@8.2.0+optimize
+[...]
+[+]  oukq22h      ^sqlite@3.26.0%gcc@8.2.0
+
+==> Updating view at [...]hpx-dev-env/.spack-env/view
+
+$ spack install
+==> Installing environment [...]/hpx-dev-env
+[...]
+                </code></pre>
+                Might be installed directly on your workstation or used to build container images
+            </section>
         </section>
 
         <section data-background-image="resources/slide-background.svg" data-background-opacity="0.9">
             <section>
                 <h3>Can I extend Spack with custom commands?</h3>
+            </section>
+
+            <section>
+                <h4>Spack can be extended with external plugins</h4>
+                <pre><code class=console" data-trim>
+$ # Folder structure for Spack's extension
+spack-scripting/
+├── pytest.ini
+├── scripting
+│   └── cmd
+│       └── filter.py
+├── tests
+│   ├── conftest.py
+│   └── test_filter.py
+└── templates
+                </code></pre>
+                You can develop your own specific extension
+            </section>
+
+            <section>
+                <h4>Extensions can be configured in <code>config.yaml</code></h4>
+                <pre><code class="yaml" data-trim>
+config:
+  extensions:
+    - [...]/spack-scripting
+                </code></pre>
+                <pre><code class="shell" data-trim>
+$ spack filter --help
+usage: spack filter [-h] [--installed | --not-installed]
+                    [--explicit | --implicit] [--output OUTPUT]
+                    ...
+
+filter specs based on their properties
+[...]
+
+$ spack test --extension=scripting
+[...]
+                </code></pre>
+
             </section>
         </section>
 
@@ -846,7 +1018,7 @@ spack:
     toolchains:
     - ['%gcc@7.3.0']
                 </code></pre>
-                Single command deployment at HPC facilities
+                Deploy all your software with a single command
             </section>
 
         </section>
