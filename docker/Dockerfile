@@ -18,14 +18,17 @@ RUN apt-get -yqq update && apt-get -yqq install ca-certificates \
         autoconf tree \
     && apt-get clean
 
-# Copy in scripts to test container
-# COPY tutorial-test.sh /tutorial/.test/tutorial-test.sh
-# RUN chmod -R go+rx /tutorial/.test/tutorial-test.sh
-
 RUN useradd -ms /bin/bash spack
 USER spack
 WORKDIR /home/spack
-RUN git clone --depth 1 https://github.com/spack/spack
+
+COPY --chown=spack:spack cscs-script.sh /home/spack/scripts/test_script.sh
+COPY --chown=spack:spack spack.yaml /home/spack/hpx-development/deps/spack.yaml
+
+RUN git clone --depth 1 -b courses/smc_cscs_2019 https://github.com/alalazo/spack
+
+RUN git clone --depth 1 https://github.com/STEllAR-GROUP/hpx.git /home/spack/hpx-development/sources
+
 RUN echo 'export PS1="\[\e[0;34m\]cscs-smc-2019\[\e[0m\] \[\e[0;32m\][\w]\[\e[m\] $ "' >> ~/.bashrc
 RUN echo '. /home/spack/spack/share/spack/setup-env.sh' >> ~/.bashrc
 
