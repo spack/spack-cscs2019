@@ -90,3 +90,5 @@ cd /home/spack/deployment/
 cat spack.yaml
 spack concretize
 spack install
+spack module lmod refresh -y --delete-tree
+module use /home/spack/deployment/.spack-env/lmod/linux-ubuntu16.04-x86_64/Core

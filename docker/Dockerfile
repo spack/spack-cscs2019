@@ -32,5 +32,6 @@ RUN git clone --depth 1 https://github.com/STEllAR-GROUP/hpx.git /home/spack/hpx
 
 RUN echo 'export PS1="\[\e[0;34m\]cscs-smc-2019\[\e[0m\] \[\e[0;32m\][\w]\[\e[m\] $ "' >> ~/.bashrc
 RUN echo '. /home/spack/spack/share/spack/setup-env.sh' >> ~/.bashrc
+RUN echo '. /usr/share/lmod/lmod/init/bash' >> ~/.bashrc
 
 ENTRYPOINT ["/bin/bash"]
