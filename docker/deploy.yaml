@@ -1,0 +1,75 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  specs:
+  - matrix:
+    - [hpx cxxstd=14]
+    - [malloc=tcmalloc, malloc=system]
+    - [^boost@1.68.0]
+    - ['%gcc@8.3.0']
+  - matrix:
+    - [git@2.21.0]
+    - ['%gcc@8.3.0']
+  - matrix:
+    - [m4, autoconf, automake, libtool, cmake, gcc@8.3.0]
+    - ['%gcc@5.4.0']
+  mirrors: {}
+  repos: []
+  upstreams: {}
+  modules:
+    enable:
+    - tcl
+    - lmod
+    tcl:
+      naming_scheme: '{name}/{version}-{compiler.name}-{compiler.version}'
+      hash_length: 0
+      all:
+        suffixes:
+          malloc=system: system-malloc
+          malloc=tcmalloc: tcmalloc
+        filter:
+          environment_blacklist: []
+        load: []
+        conflict: []
+        environment:
+          unset: []
+      blacklist_implicits: false
+      verbose: false
+      whitelist: []
+      blacklist: []
+    lmod:
+      hash_length: 0
+      core_compilers:
+      - gcc@5.4.0
+      - gcc@4.7
+      whitelist:
+      - gcc@8.3.0 %gcc@5.4.0
+      - cmake %gcc@5.4.0
+      - autoconf %gcc@5.4.0
+      - automake %gcc@5.4.0
+      - libtool %gcc@5.4.0
+      blacklist:
+      - '%gcc@5.4.0'
+      all:
+        suffixes:
+          malloc=system: system-malloc
+          malloc=tcmalloc: tcmalloc
+        filter:
+          environment_blacklist: []
+        load: []
+        conflict: []
+        environment:
+          unset: []
+      blacklist_implicits: false
+      verbose: false
+      hierarchy: []
+  concretize_together: false
+  packages: {}
+  config:
+    module_roots:
+      tcl: /home/spack/deployment/.spack-env/modules
+      lmod: /home/spack/deployment/.spack-env/lmod
+  definitions: []
+  view: false

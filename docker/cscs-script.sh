@@ -82,8 +82,11 @@ mkdir /home/spack/hpx-development/build
 cd /home/spack/hpx-development/build
 cmake -DCMAKE_INSTALL_PREFIX=/home/spack/hpx-developent/install -DHPX_WITH_CXX14=ON -DHPX_WITH_VALGRIND=ON -DBOOST_ROOT=/home/spack/hpx-development/deps/.spack-env/view -DHWLOC_ROOT=/home/spack/hpx-development/deps/.spack-env/view -DHPX_WITH_MALLOC=system -DVALGRIND_ROOT=/home/spack/hpx-development/deps/.spack-env/view -DHPX_WITH_EXAMPLES=OFF ../sources
 make && make install
-cd
 
 ##
 # Deploy stable versions
 ##
+cd /home/spack/deployment/
+cat spack.yaml
+spack concretize
+spack install

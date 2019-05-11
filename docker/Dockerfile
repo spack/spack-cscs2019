@@ -15,7 +15,7 @@ RUN apt-get -yqq update && apt-get -yqq install ca-certificates \
         iproute2 make \
         openssh-server python python-pip tcl \
         emacs unzip \
-        autoconf tree \
+        autoconf tree lmod \
     && apt-get clean
 
 RUN useradd -ms /bin/bash spack
@@ -24,6 +24,7 @@ WORKDIR /home/spack
 
 COPY --chown=spack:spack cscs-script.sh /home/spack/scripts/test_script.sh
 COPY --chown=spack:spack spack.yaml /home/spack/hpx-development/deps/spack.yaml
+COPY --chown=spack:spack deploy.yaml /home/spack/deployment/spack.yaml
 
 RUN git clone --depth 1 -b courses/smc_cscs_2019 https://github.com/alalazo/spack
 
